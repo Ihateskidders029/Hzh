@@ -1,0 +1,94 @@
+-- Find the Cryptic GUI in CoreGui
+local crypticGui = game:GetService("CoreGui"):FindFirstChild("Cryptic")
+
+if crypticGui then
+    -- Navigate to the ImageLabel inside "Cryptic" -> "Toggle" -> "Frame"
+    local imageLabel = crypticGui:FindFirstChild("Toggle", true)
+                    and crypticGui.Toggle:FindFirstChild("Frame", true)
+                    and crypticGui.Toggle.Frame:FindFirstChild("ImageLabel")
+
+    -- Only proceed if ImageLabel is found
+    if imageLabel then
+        -- Create the main editor GUI in CoreGui
+        local EditorGui = Instance.new("ScreenGui")
+        EditorGui.Name = "EditorGui"
+        EditorGui.Parent = game:GetService("CoreGui")
+        EditorGui.ResetOnSpawn = false
+
+        -- Create the Main Frame
+        local EditorFrame = Instance.new("Frame")
+        EditorFrame.Size = UDim2.new(0, 300, 0, 150)
+        EditorFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+        EditorFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        EditorFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+        EditorFrame.Parent = EditorGui
+
+        -- Rounded Corners
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 10)
+        corner.Parent = EditorFrame
+
+        -- TextBox for Decal ID input
+        local DecalTextBox = Instance.new("TextBox")
+        DecalTextBox.Size = UDim2.new(0.8, 0, 0.2, 0)
+        DecalTextBox.Position = UDim2.new(0.1, 0, 0.2, 0)
+        DecalTextBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        DecalTextBox.TextColor3 = Color3.new(1, 1, 1)
+        DecalTextBox.PlaceholderText = "Enter Decal ID"
+        DecalTextBox.Font = Enum.Font.Gotham
+        DecalTextBox.TextSize = 16
+        DecalTextBox.Parent = EditorFrame
+
+        -- Submit Button
+        local SubmitButton = Instance.new("TextButton")
+        SubmitButton.Size = UDim2.new(0.4, 0, 0.2, 0)
+        SubmitButton.Position = UDim2.new(0.55, 0, 0.7, 0)
+        SubmitButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+        SubmitButton.TextColor3 = Color3.new(1, 1, 1)
+        SubmitButton.Text = "Submit"
+        SubmitButton.Font = Enum.Font.GothamBold
+        SubmitButton.TextSize = 16
+        SubmitButton.Parent = EditorFrame
+
+        -- Cancel Button
+        local CancelButton = Instance.new("TextButton")
+        CancelButton.Size = UDim2.new(0.4, 0, 0.2, 0)
+        CancelButton.Position = UDim2.new(0.05, 0, 0.7, 0)
+        CancelButton.BackgroundColor3 = Color3.fromRGB(180, 70, 70)
+        CancelButton.TextColor3 = Color3.new(1, 1, 1)
+        CancelButton.Text = "Cancel"
+        CancelButton.Font = Enum.Font.GothamBold
+        CancelButton.TextSize = 16
+        CancelButton.Parent = EditorFrame
+
+        -- Rounded Corners for Buttons
+        local SubmitButtonCorner = Instance.new("UICorner", SubmitButton)
+        SubmitButtonCorner.CornerRadius = UDim.new(0, 10)
+
+        local CancelButtonCorner = Instance.new("UICorner", CancelButton)
+        CancelButtonCorner.CornerRadius = UDim.new(0, 10)
+
+        -- Set the default moon icon decal ID
+        local defaultMoonDecal = "rbxassetid://19005999590"
+
+        -- Submit Button Action
+        SubmitButton.MouseButton1Click:Connect(function()
+            local decalId = DecalTextBox.Text
+            if decalId ~= "" then
+                imageLabel.Image = "rbxassetid://" .. decalId
+            end
+        end)
+
+        -- Cancel Button Action
+        CancelButton.MouseButton1Click:Connect(function()
+            -- Reset ImageLabel to default moon icon
+            imageLabel.Image = defaultMoonDecal
+            -- Remove the Editor GUI
+            EditorGui:Destroy()
+        end)
+    else
+        warn("ImageLabel not found in the expected path inside Cryptic GUI.")
+    end
+else
+    warn("Cryptic GUI not found in CoreGui.")
+end
